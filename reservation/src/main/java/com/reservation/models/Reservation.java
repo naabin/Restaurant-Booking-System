@@ -1,0 +1,164 @@
+package com.reservation.models;
+
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "reservation")
+public class Reservation {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@Column(name = "full_name")
+	private String fullName;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "phone_number")
+	private String phoneNumber;
+
+	@Column(name = "numner_of_peoeple")
+	private Integer numberOfPeople;
+
+	@Column(name = "date")
+	private LocalDate date;
+
+	@Column(name = "special_request")
+	private String specialRequest;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public Integer getNumberOfPeople() {
+		return numberOfPeople;
+	}
+
+	public void setNumberOfPeople(Integer numberOfPeople) {
+		this.numberOfPeople = numberOfPeople;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		if (date.isBefore(LocalDate.now())) {
+			this.date = LocalDate.now();
+		}
+		this.date = date;
+	}
+
+	public String getSpecialRequest() {
+		return specialRequest;
+	}
+
+	public void setSpecialRequest(String specialRequest) {
+		this.specialRequest = specialRequest;
+	}
+
+	@Override
+	public String toString() {
+		return "Reservation [id=" + id + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber
+				+ ", numberOfPeople=" + numberOfPeople + ", date=" + date + ", specialRequest=" + specialRequest + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((numberOfPeople == null) ? 0 : numberOfPeople.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result + ((specialRequest == null) ? 0 : specialRequest.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Reservation other = (Reservation) obj;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (fullName == null) {
+			if (other.fullName != null)
+				return false;
+		} else if (!fullName.equals(other.fullName))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (numberOfPeople == null) {
+			if (other.numberOfPeople != null)
+				return false;
+		} else if (!numberOfPeople.equals(other.numberOfPeople))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (specialRequest == null) {
+			if (other.specialRequest != null)
+				return false;
+		} else if (!specialRequest.equals(other.specialRequest))
+			return false;
+		return true;
+	}
+
+}
