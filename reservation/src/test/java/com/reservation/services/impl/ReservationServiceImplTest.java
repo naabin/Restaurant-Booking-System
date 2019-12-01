@@ -11,43 +11,43 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.reservation.models.Reservation;
 import com.reservation.repositories.ReservationRepository;
-import com.reservation.services.ReservationService;
 
+@ExtendWith(MockitoExtension.class)
 class ReservationServiceImplTest {
-	
+
 	@Mock
 	private ReservationRepository reservationRepository;
-	
+
 	@InjectMocks
-	private ReservationService reservationService;
-	
+	private ReservationServiceImpl reservationService;
+
 	private Reservation reservation;
-	
-	private final Long ID = 1L;
-	
-	
+
+	private static final Long ID = 1L;
 
 	@BeforeEach
 	void setUp() throws Exception {
-		this.reservation = new Reservation();
-		reservation.setId(this.ID);
+		reservation = new Reservation();
+		reservation.setId(ID);
 		reservation.setFullName("John Doe");
 		reservation.setEmail("john@email.com");
 		reservation.setPhoneNumber("0123456789");
 		reservation.setNumberOfPeople(2);
 		reservation.setDate(LocalDate.now());
-		}
+	}
 
 	@Test
 	void testCreateReservation() {
 		Reservation r1 = new Reservation();
-		r1.setId(ID);
+		r1.setId(2L);
 		r1.setFullName("John");
 		r1.setEmail("john@email.com");
 		r1.setPhoneNumber("01234556789");
@@ -55,35 +55,40 @@ class ReservationServiceImplTest {
 		r1.setDate(LocalDate.now());
 		r1.setSpecialRequest("This is test");
 		
+		when(this.reservationRepository.save(Mockito.any())).thenReturn(reservation);
+
 		Reservation savedReservation = this.reservationService.createReservation(r1);
-		
+
 		assertNotNull(savedReservation);
-		
-		assertEquals(this.ID, savedReservation.getId());
+
+		assertEquals(ID, savedReservation.getId());
 	}
 
 	@Test
 	void testUpdateReservation() {
-		this.reservation.setId(2L);
-		this.reservation.setFullName("Tony");
-		Reservation updatedReservation = this.reservationService.createReservation(this.reservation);
+
+		reservation.setId(2L);
+		reservation.setFullName("Tony");
+		when(this.reservationRepository.save(Mockito.any())).thenReturn(reservation);
+		Reservation updatedReservation = this.reservationService.updateReservation(reservation);
 		assertEquals(2L, updatedReservation.getId());
 		assertEquals("Tony", updatedReservation.getFullName());
+
 	}
 
 	@Test
 	void testGetAllReservations() {
 		List<Reservation> reservations = new ArrayList<Reservation>();
-		for(long i = 0; i < 3; i++) {
+		for (long i = 0; i < 3; i++) {
 			Reservation reservation = new Reservation();
 			reservation.setId(i);
 			reservation.setFullName("Test " + i);
 			reservations.add(reservation);
 		}
-		
+
 		when(this.reservationRepository.findAll()).thenReturn(reservations);
 		List<Reservation> allReservations = this.reservationService.getAllReservations();
-		
+
 		assertNotNull(allReservations);
 		assertEquals(3, allReservations.size());
 	}
@@ -92,19 +97,19 @@ class ReservationServiceImplTest {
 	void testFindById() {
 		when(this.reservationRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(this.reservation));
 		Reservation reservationById = this.reservationService.findById(this.reservation.getId());
-		
+
 		assertNotNull(reservationById);
-		assertEquals(this.ID, reservationById.getId());
+		assertEquals(ID, reservationById.getId());
 	}
-	
+
 	@Test
 	void testNotFoundById() {
 		when(this.reservationRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
-		
+
 		Reservation findById = this.reservationService.findById(ID);
-		
+
 		assertNull(findById);
-		
+
 	}
 
 	@Test
