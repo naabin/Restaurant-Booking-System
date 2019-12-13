@@ -1,6 +1,7 @@
 package com.reservation.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.reservation.models.Reservation;
 
@@ -12,7 +13,7 @@ public interface ReservationService {
 	
 	List<Reservation> getAllReservations();
 	
-	Reservation findById(Long id);
+	Optional<Reservation> findById(Long id);
 	
 	void deleteReservationById(Long id);
 	

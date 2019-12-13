@@ -96,19 +96,21 @@ class ReservationServiceImplTest {
 	@Test
 	void testFindById() {
 		when(this.reservationRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(this.reservation));
-		Reservation reservationById = this.reservationService.findById(this.reservation.getId());
+		Optional<Reservation> reservationById = this.reservationService.findById(this.reservation.getId());
 
-		assertNotNull(reservationById);
-		assertEquals(ID, reservationById.getId());
+		assertNotNull(reservationById.get());
+		assertEquals(ID, reservationById.get().getId());
 	}
 
 	@Test
 	void testNotFoundById() {
 		when(this.reservationRepository.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
-		Reservation findById = this.reservationService.findById(ID);
-
-		assertNull(findById);
+		Optional<Reservation> findById = this.reservationService.findById(ID);
+		if(findById.isPresent()) {
+			assertNull(findById.get());
+		}
+		
 
 	}
 

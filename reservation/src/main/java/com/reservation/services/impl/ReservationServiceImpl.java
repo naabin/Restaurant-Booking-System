@@ -38,9 +38,8 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public Reservation findById(Long id) {
-		Optional<Reservation> reservation = this.reservationRepository.findById(id);
-		return reservation.orElse(null);
+	public Optional<Reservation> findById(Long id) {
+		return this.reservationRepository.findById(id);
 	}
 
 	@Override

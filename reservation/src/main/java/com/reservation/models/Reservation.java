@@ -8,30 +8,47 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 @Table(name = "reservation")
+@ApiModel(description = "Details about reservation")
 public class Reservation {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(notes = "Auto genereated ID from the database")
 	private Long id;
 
+	@ApiModelProperty(notes = "Full name of person who is making reservation")
 	@Column(name = "full_name")
+	@NotNull
 	private String fullName;
 
+	@ApiModelProperty(notes = "Email of the person who is making reservation")
 	@Column(name = "email")
+	@NotNull
 	private String email;
 
+	@ApiModelProperty(notes = "Phone number of the person who is making reservation")
 	@Column(name = "phone_number")
+	@NotNull
 	private String phoneNumber;
 
+	@ApiModelProperty(notes = "Number of people for the reservation")
 	@Column(name = "numner_of_peoeple")
+	@NotNull
 	private Integer numberOfPeople;
 
+	@ApiModelProperty(notes = "Date of reservation")
 	@Column(name = "date")
+	@NotNull
 	private LocalDate date;
 
+	@ApiModelProperty(notes = "Special request of made for reservation")
 	@Column(name = "special_request")
 	private String specialRequest;
 
