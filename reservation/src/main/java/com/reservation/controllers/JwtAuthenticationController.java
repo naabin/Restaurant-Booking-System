@@ -28,6 +28,8 @@ public class JwtAuthenticationController {
 	private final JwtTokenUtil jwtTokenUtil;
 
 	private final BookingUserService userService;
+	
+	
 
 	public JwtAuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,
 			BookingUserService userService) {
@@ -35,6 +37,7 @@ public class JwtAuthenticationController {
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenUtil = jwtTokenUtil;
 		this.userService = userService;
+		
 	}
 	
 	
@@ -45,6 +48,8 @@ public class JwtAuthenticationController {
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 		
 		final UserDetails userDetails = this.userService.loadUserByUsername(authenticationRequest.getUsername());
+		
+		
 		
 		final String token = this.jwtTokenUtil.generateToken(userDetails);
 		
