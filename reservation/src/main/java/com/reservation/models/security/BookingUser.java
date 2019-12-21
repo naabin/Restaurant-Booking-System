@@ -35,6 +35,9 @@ public class BookingUser implements UserDetails {
 	private String lastName;
 	
 	@Column
+	private String email;
+	
+	@Column
 	private String username;
 	
 	@Column
