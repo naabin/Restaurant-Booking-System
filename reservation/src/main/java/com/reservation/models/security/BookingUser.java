@@ -43,13 +43,14 @@ public class BookingUser implements UserDetails {
 	@Column
 	private String password;
 	
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<UserRole> userRoles = new HashSet<UserRole>();
 
 
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities =  new HashSet<GrantedAuthority>();
@@ -148,6 +149,16 @@ public class BookingUser implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	
 	
 	
 

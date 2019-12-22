@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/reservation")
-@Api(value = "Reservation Mangement System")
+@Api(value = "Reservation CRUD")
 public class ReservationController {
 	
 	private final ReservationService reservationService;
