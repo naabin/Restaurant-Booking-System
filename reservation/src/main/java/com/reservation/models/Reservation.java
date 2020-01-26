@@ -1,6 +1,7 @@
 package com.reservation.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +48,11 @@ public class Reservation {
 	@Column(name = "date")
 	@NotNull
 	private LocalDate date;
+	
+	@ApiModelProperty(notes = "Time of reservation")
+	@Column(name = "time")
+	@NotNull
+	private LocalDateTime time;
 
 	@ApiModelProperty(notes = "Special request of made for reservation")
 	@Column(name = "special_request")
@@ -58,6 +64,14 @@ public class Reservation {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
 	}
 
 	public String getFullName() {
