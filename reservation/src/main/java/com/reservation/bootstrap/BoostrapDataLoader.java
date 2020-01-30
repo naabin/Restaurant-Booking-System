@@ -1,6 +1,7 @@
 package com.reservation.bootstrap;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public class BoostrapDataLoader implements CommandLineRunner {
 		reservation.setNumberOfPeople(2);
 		reservation.setPhoneNumber("012345678");
 		reservation.setDate(LocalDate.now());
+		reservation.setTime(LocalDateTime.now());
 		reservation.setSpecialRequest("I would like some food without any meat on it.");
 
 		this.reservationService.createReservation(reservation);
@@ -47,6 +49,7 @@ public class BoostrapDataLoader implements CommandLineRunner {
 		reservation2.setFullName("Thomas Wayne");
 		reservation2.setEmail("thomas@batman.com");
 		reservation2.setDate(LocalDate.now());
+		reservation2.setTime(LocalDateTime.now());
 		reservation2.setPhoneNumber("012345678");
 		reservation2.setSpecialRequest("I would like some meat of bats.");
 		reservation2.setNumberOfPeople(1);

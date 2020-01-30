@@ -65,7 +65,7 @@ public class JwtAuthenticationController {
 			throw new Exception("USER DISABLED", exception);
 		}
 		catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
+			throw new BadCredentialsException("INVALID CREDENTIALS", e);
 		}
 	}
 
