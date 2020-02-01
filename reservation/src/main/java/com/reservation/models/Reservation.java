@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
 @Entity
 @Table(name = "reservation")
 @ApiModel(description = "Details about reservation")
-public class Reservation {
+public class Reservation  extends Auditable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
