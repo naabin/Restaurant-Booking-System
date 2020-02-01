@@ -2,6 +2,7 @@ package com.reservation.bootstrap;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,25 +10,32 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.reservation.models.OpeningHours;
 import com.reservation.models.Reservation;
+import com.reservation.models.Restaurant;
 import com.reservation.models.security.BookingUser;
 import com.reservation.models.security.Role;
 import com.reservation.models.security.UserRole;
 import com.reservation.services.BookingUserService;
 import com.reservation.services.ReservationService;
+import com.reservation.services.RestaurantService;
 
 @Component
 public class BoostrapDataLoader implements CommandLineRunner {
 
-	private final ReservationService reservationService;
+	private  ReservationService reservationService;
 
 	private final BookingUserService bookingUserService;
+	
+	private final RestaurantService restaurantService;
 
 	public BoostrapDataLoader(ReservationService reservationService, 
-			BookingUserService bookingUserService) {
+			BookingUserService bookingUserService,
+			RestaurantService restaurantService) {
 
 		this.reservationService = reservationService;
 		this.bookingUserService = bookingUserService;
+		this.restaurantService = restaurantService;
 	}
 
 	@Override
@@ -73,6 +81,33 @@ public class BoostrapDataLoader implements CommandLineRunner {
 		System.out.println("Loading dummy data via bootstrap loader...");
 		
 		userRoles.clear();
+		
+		
+		Restaurant restaurant = new Restaurant();
+		restaurant.setId(1l);
+		restaurant.setAddress("Sydney, Australia");
+		restaurant.setName("Java Restaurant");
+		restaurant.setPhoneNumber("1234567890");
+		restaurant.setCreatedBy("Nabin");
+		restaurant.setCreatedDate(LocalDateTime.now());
+		restaurant.setLastModifiedBy("Nabin");
+		restaurant.setLastModifiedDate(LocalDateTime.now());
+		
+		Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
+		
+		OpeningHours sunday = new OpeningHours();
+		sunday.setDayOfWeek("Monday");
+		sunday.setId(1L);
+		sunday.setFrom(LocalTime.now());
+		sunday.setTo(LocalTime.MIDNIGHT);
+		
+		openingHours.add(sunday);
+		
+		restaurant.setOpeningHours(openingHours);
+		
+		this.restaurantService.createRestaurant(restaurant);
+		
+		openingHours.clear();
 
 	}
 
