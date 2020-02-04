@@ -1,6 +1,8 @@
 package com.reservation.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -35,6 +37,10 @@ public class Restaurant extends Auditable {
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Reservation> bookings = new ArrayList<Reservation>();
+	
 
 	public Long getId() {
 		return id;
@@ -75,5 +81,15 @@ public class Restaurant extends Auditable {
 	public void setOpeningHours(Set<OpeningHours> openingHours) {
 		this.openingHours = openingHours;
 	}
+
+	public List<Reservation> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Reservation> bookings) {
+		this.bookings = bookings;
+	}
+	
+	
 
 }
