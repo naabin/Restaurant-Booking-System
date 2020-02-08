@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.reservation.models.OpeningHours;
@@ -68,13 +67,18 @@ public class BoostrapDataLoader implements CommandLineRunner {
 		user.setFirstName("Nabin");
 		user.setLastName("Karki");
 		user.setUsername("Nabin");
-		user.setPassword(new BCryptPasswordEncoder().encode("test"));
+		user.setPassword("test");
 
 		Set<UserRole> userRoles = new HashSet<UserRole>();
-		Role role = new Role();
-		role.setRole("ROLE_ADMIN");
+		Role role1 = new Role();
+		role1.setRole("ROLE_ADMIN");
+		
+		Role role2 = new Role();
+		role2.setRole("ROLE_USER");
+		
 
-		userRoles.add(new UserRole(user, role));
+		userRoles.add(new UserRole(user, role1));
+		userRoles.add(new UserRole(user, role2));
 
 		this.bookingUserService.createUser(user, userRoles);
 

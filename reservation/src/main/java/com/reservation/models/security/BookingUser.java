@@ -50,7 +50,7 @@ public class BookingUser implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	@JsonIgnore
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities =  new HashSet<GrantedAuthority>();
@@ -70,8 +70,6 @@ public class BookingUser implements UserDetails {
 	}
 
 
-
-	@JsonIgnore
 	@Override
 	public String getPassword() {
 
