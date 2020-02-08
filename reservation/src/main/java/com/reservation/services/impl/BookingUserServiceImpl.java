@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,7 @@ import com.reservation.models.security.BookingUser;
 import com.reservation.models.security.UserRole;
 import com.reservation.repositories.BookingUserRepository;
 import com.reservation.repositories.RoleRepository;
+import com.reservation.securityconfig.PasswordEncrypt;
 import com.reservation.services.BookingUserService;
 
 @Service
@@ -29,10 +31,14 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	private final BookingUserRepository userRepo;
 
 	private final RoleRepository roleRepo;
+	
+	private  PasswordEncrypt passwordEncrypt;
 
-	public BookingUserServiceImpl(BookingUserRepository userRepo, RoleRepository roleRepo) {
+	public BookingUserServiceImpl(BookingUserRepository userRepo, 
+			RoleRepository roleRepo, PasswordEncrypt passwordEncrypt) {
 		this.userRepo = userRepo;
 		this.roleRepo = roleRepo;
+		this.passwordEncrypt = passwordEncrypt;
 	}
 
 	@Override
@@ -43,6 +49,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 		if (localUser != null) {
 			LOG.info("User with username {} already exists. " + user.getUsername());
 		} else {
+			user.setPassword(this.passwordEncrypt.passwordEncoder().encode(user.getPassword()));
 			for (UserRole role : userRoles) {
 				roleRepo.save(role.getRole());
 			}
@@ -70,16 +77,19 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ADMIN')")
 	public List<BookingUser> getAllUsers() {
 		return userRepo.findAll();
 	}
 
 	@Override
+	@PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
 	public Optional<BookingUser> findUserById(Long id) {
 		return userRepo.findById(id);
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void deleteUserById(Long id) {
 		userRepo.deleteById(id);
 	}

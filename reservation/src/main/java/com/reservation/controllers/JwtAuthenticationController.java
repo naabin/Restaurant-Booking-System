@@ -20,7 +20,7 @@ import com.reservation.securityconfig.JwtTokenUtil;
 import com.reservation.services.BookingUserService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(maxAge = 3600)
 public class JwtAuthenticationController {
 
 	private final AuthenticationManager authenticationManager;

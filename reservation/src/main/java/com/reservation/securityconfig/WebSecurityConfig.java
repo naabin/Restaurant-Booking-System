@@ -1,6 +1,5 @@
 package com.reservation.securityconfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -28,16 +26,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final UserDetailsService userDetailsService;
 	
 	private JwtRequestFilter jwtRequestFilter;
+	PasswordEncrypt passwordEncrypt;
+	
 
 	public WebSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, 
 			UserDetailsService userDetailsService,
-			JwtRequestFilter jwtRequestFilter) {
+			JwtRequestFilter jwtRequestFilter,
+			PasswordEncrypt passwordEncrypt
+			
+			) {
 		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
 		this.userDetailsService = userDetailsService;
 		this.jwtRequestFilter = jwtRequestFilter;
+		this.passwordEncrypt = passwordEncrypt;
 	}
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	
+	
+	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
+	private BCryptPasswordEncoder passwordEncoder() {
+		return this.passwordEncrypt.passwordEncoder();
+	}
+	
+	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		//Configure AuthenticationManager so that it knows from where to load
 		//User matching credentials 
 		//User BCryptPasswordEncoder
@@ -45,24 +61,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
 	
-	@Bean
-	@Override
-	protected AuthenticationManager authenticationManager() throws Exception {
-		return super.authenticationManager();
-	}
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf()
 			.disable()
 			.authorizeRequests()
-			.antMatchers("/authenticate", "/api/user/register", "/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
+			.antMatchers("/api/user/register")
+			.permitAll()
+			.antMatchers("/authenticate", "/h2-console/**", "/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
 			.permitAll()
 			.antMatchers(HttpMethod.OPTIONS, "/**")
 			.permitAll()
@@ -84,7 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
 		
-		http.addFilterBefore(this.jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	
