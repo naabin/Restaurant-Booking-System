@@ -1,5 +1,6 @@
 package com.reservation.controllers;
 
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.reservation.models.security.BookingUser;
 import com.reservation.models.security.JwtRequest;
 import com.reservation.models.security.JwtResponse;
 import com.reservation.securityconfig.JwtTokenUtil;
@@ -49,12 +51,17 @@ public class JwtAuthenticationController {
 		
 		final UserDetails userDetails = this.userService.loadUserByUsername(authenticationRequest.getUsername());
 		
-		
+		BookingUser username = this.userService.loadUserByUsername(authenticationRequest.getUsername());		
 		
 		final String token = this.jwtTokenUtil.generateToken(userDetails);
 		
-		return ResponseEntity.ok(new JwtResponse(token));
-		
+		return ResponseEntity.ok().body(
+				new JwtResponse(token, 
+						username.getId(), 
+						username.getFirstName(), 
+						username.getLastName(), 
+						username.getEmail(),
+						username.getUserRoles()));
 	}
 	
 	
