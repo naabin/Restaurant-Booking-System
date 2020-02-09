@@ -1,6 +1,5 @@
 package com.reservation.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,8 +9,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -63,7 +60,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) {
+	public BookingUser loadUserByUsername(String username) {
 
 		BookingUser user = userRepo.findByUsername(username);
 
@@ -73,7 +70,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 			throw new UsernameNotFoundException(username + " not found");
 		}
 
-		return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+		return user;
 	}
 
 	@Override
