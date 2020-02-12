@@ -47,11 +47,7 @@ public class UserController {
 			@Valid @RequestBody BookingUser user) throws Exception{
 		try {
 			userService.createUser(user, user.getUserRoles());
-			String html = "<div>"
-					+ "<p>Username: " + user.getUsername() + "</p>"
-					+ "<p>Password: " + user.getPassword() + "</p>"
-					+ "<p><a href='http://localhost:8080/authenticate'>Click here to login</a></p>"
-					+ "</div>";
+			String html = "User with " + user.getUsername()+ " has been successfully created.";
 			emailService.sendHtml("naabin@outlook.com", user.getEmail(), "User Registration", html);
 			return ResponseEntity.ok().body("User registration successful.");
 		} catch (Exception e) {
