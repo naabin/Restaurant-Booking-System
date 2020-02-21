@@ -74,7 +74,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	}
 
 	@Override
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public List<BookingUser> getAllUsers() {
 		return userRepo.findAll();
 	}
