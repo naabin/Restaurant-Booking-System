@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,16 +30,20 @@ public class BookingUser implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column
+	@Column(unique = true)
+	@NotEmpty(message = "The username aleady exists")
 	private String firstName;
 	
 	@Column
 	private String lastName;
 	
 	@Column
+	@Email
+	@NotEmpty(message = "Email field cannot be empty")
 	private String email;
 	
-	@Column
+	@Column(unique = true)
+	@NotEmpty(message = "Username field cannot be empty.")
 	private String username;
 	
 	@Column
@@ -50,7 +56,7 @@ public class BookingUser implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities =  new HashSet<GrantedAuthority>();

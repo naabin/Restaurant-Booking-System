@@ -44,9 +44,10 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 		BookingUser localUser = this.userRepo.findByUsername(user.getUsername());
 
 		if (localUser != null) {
-			LOG.info("User with username {} already exists. " + user.getUsername());
+			LOG.info("User with username" + user.getUsername() + " already exists. ");
 		} else {
 			user.setPassword(this.passwordEncrypt.passwordEncoder().encode(user.getPassword()));
+			user.setUsername(user.getUsername().toLowerCase());
 			for (UserRole role : userRoles) {
 				roleRepo.save(role.getRole());
 			}
@@ -89,6 +90,12 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public void deleteUserById(Long id) {
 		userRepo.deleteById(id);
+	}
+
+	@Override
+	public boolean uniqueUserAvailable(String username) {
+		BookingUser findByUsername = this.userRepo.findByUsername(username);
+		return !(findByUsername != null && findByUsername.getUsername().equals(username));
 	}
 
 }

@@ -18,5 +18,7 @@ public interface BookingUserService {
 	void deleteUserById(Long id);
 	
 	BookingUser loadUserByUsername(String username);
+	
+	boolean uniqueUserAvailable(String username);
 
 }
