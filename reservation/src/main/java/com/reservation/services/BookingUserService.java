@@ -19,6 +19,8 @@ public interface BookingUserService {
 	
 	BookingUser loadUserByUsername(String username);
 	
+	BookingUser updateUser(BookingUser user, Set<UserRole> userRoles);
+	
 	boolean uniqueUserAvailable(String username);
 
 }

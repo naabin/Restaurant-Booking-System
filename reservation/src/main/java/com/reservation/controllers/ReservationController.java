@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reservation.exception.ResourceNotFoundException;
 import com.reservation.models.Reservation;
+import com.reservation.models.Restaurant;
 import com.reservation.services.ReservationService;
+import com.reservation.services.RestaurantService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,13 +33,12 @@ import io.swagger.annotations.ApiResponses;
 public class ReservationController {
 	
 	private final ReservationService reservationService;
+	private final RestaurantService restaurantService;
 	
-	
-	public ReservationController(ReservationService reservationService) {
+	public ReservationController(ReservationService reservationService, RestaurantService restaurantService) {
 		this.reservationService = reservationService;
+		this.restaurantService = restaurantService;	
 	}
-
-
 	@ApiOperation(value = "View all the list of reservations", response = List.class)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Succefully retrieved lists of reservation"),
@@ -45,29 +47,49 @@ public class ReservationController {
 			@ApiResponse(code = 404, message = "The resource you were trying to find is either unavailabe or not found.")
 	})
 	@GetMapping("/all")
-	public ResponseEntity<List<Reservation>> getAllReservation(){
-		List<Reservation> allReservations = this.reservationService.getAllReservations();
+	public ResponseEntity<List<Reservation>> getAllReservation(@RequestParam("restaurantId") long restaurantId) throws ResourceNotFoundException{
 		
-		return ResponseEntity.ok().body(allReservations);
+		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
+				
+		if(restaurant.getId().equals(restaurantId)) {
+			return ResponseEntity.ok().body(restaurant.getBookings());
+		}
+		else {
+			return ResponseEntity.badRequest().body(null);
+		}
+		
+		
 	}
 	
 	
 	@ApiOperation(value = "Retrieve reservation by an ID")
 	@GetMapping("/{id}")
-	public ResponseEntity<Reservation> getReservationById(@PathVariable("id") Long id) throws ResourceNotFoundException{
-		Reservation reservation = this.reservationService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reservtion id:  " 
+	public ResponseEntity<Reservation> getReservationById(@PathVariable("id") Long id, @RequestParam("restaurantId")Long restuarantId) throws ResourceNotFoundException{
+		Restaurant restaurant = this.restaurantService.findRestaurantById(restuarantId).orElseThrow(() -> new ResourceNotFoundException("No Such restaurant found.") );
+		Reservation reservation = 	this.reservationService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Reservtion id:  " 
 										+ id + " could not be found." ));
-		return ResponseEntity.ok().body(reservation);
+		
+		if(reservation.getRestaurant().getId().equals(restaurant.getId())) {
+			return ResponseEntity.ok().body(reservation);
+		}
+		else {
+			return ResponseEntity.badRequest().body(null);
+		}
+		
+		
 	}
 	
 	@PostMapping("/new")
 	public ResponseEntity<?> createReservation(
 			@ApiParam(value = "Reservation object store in a database table", required = true)
 			@Valid 
-			@RequestBody Reservation reservation){
-		Reservation savedReservation = this.reservationService.createReservation(reservation);
+			@RequestBody Reservation reservation,
+			@RequestParam("restaurantId")Long restaurantId) throws ResourceNotFoundException{
 		
-		return ResponseEntity.ok().body("Reservation is created with an id " + savedReservation.getId());
+		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
+		reservation.setRestaurant(restaurant);
+		this.restaurantService.updateRestaurant(restaurant, reservation);
+		return ResponseEntity.ok().body("Reservation is created");
 
 	}
 	

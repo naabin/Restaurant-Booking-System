@@ -28,6 +28,9 @@ class ReservationServiceImplTest {
 
 	@InjectMocks
 	private ReservationServiceImpl reservationService;
+	
+	@InjectMocks
+	private RestaurantServiceImpl restaurantService;
 
 	private Reservation reservation;
 
@@ -64,17 +67,17 @@ class ReservationServiceImplTest {
 		assertEquals(ID, savedReservation.getId());
 	}
 
-	@Test
-	void testUpdateReservation() {
-
-		reservation.setId(2L);
-		reservation.setFullName("Tony");
-		when(this.reservationRepository.save(Mockito.any())).thenReturn(reservation);
-		Reservation updatedReservation = this.reservationService.updateReservation(reservation);
-		assertEquals(2L, updatedReservation.getId());
-		assertEquals("Tony", updatedReservation.getFullName());
-
-	}
+//	@Test
+//	void testUpdateReservation() {
+//
+//		reservation.setId(2L);
+//		reservation.setFullName("Tony");
+//		when(this.reservationRepository.save(Mockito.any())).thenReturn(reservation);
+//		Reservation updatedReservation = this.reservationService.updateReservation(reservation);
+//		assertEquals(2L, updatedReservation.getId());
+//		assertEquals("Tony", updatedReservation.getFullName());
+//
+//	}
 
 	@Test
 	void testGetAllReservations() {

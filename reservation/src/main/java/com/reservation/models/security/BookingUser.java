@@ -11,7 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -20,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.reservation.models.Restaurant;
 
 @Entity
 @Table(name = "user")
@@ -30,7 +33,7 @@ public class BookingUser implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	@Column
 	@NotEmpty(message = "The username aleady exists")
 	private String firstName;
 	
@@ -46,12 +49,27 @@ public class BookingUser implements UserDetails {
 	@NotEmpty(message = "Username field cannot be empty.")
 	private String username;
 	
+	
 	@Column
 	private String password;
 	
 	
+	
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<UserRole> userRoles = new HashSet<UserRole>();
+	
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "restaurant_id", referencedColumnName = "id")
+	private Restaurant restaurant;
 
 
 	private static final long serialVersionUID = 1L;

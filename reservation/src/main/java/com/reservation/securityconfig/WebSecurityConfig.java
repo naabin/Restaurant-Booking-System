@@ -70,6 +70,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/api/user/register")
 			.permitAll()
+			.antMatchers("/api/user/checkuniqueuser")
+			.permitAll()
 			.antMatchers("/authenticate", "/h2-console/**", "/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**")
 			.permitAll()
 			.antMatchers(HttpMethod.OPTIONS, "/**")

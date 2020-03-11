@@ -64,7 +64,6 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	public BookingUser loadUserByUsername(String username) {
 
 		BookingUser user = userRepo.findByUsername(username);
-
 		if (user == null) {
 			LOG.warn("User {} not found with username " + username);
 
@@ -96,6 +95,15 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	public boolean uniqueUserAvailable(String username) {
 		BookingUser findByUsername = this.userRepo.findByUsername(username);
 		return !(findByUsername != null && findByUsername.getUsername().equals(username));
+	}
+
+	@Override
+	public BookingUser updateUser(BookingUser user, Set<UserRole> userRoles) {
+		for(UserRole userRole: userRoles) {
+			this.roleRepo.saveAndFlush(userRole.getRole());
+		}
+		user.getUserRoles().addAll(userRoles);
+		return this.userRepo.saveAndFlush(user);
 	}
 
 }

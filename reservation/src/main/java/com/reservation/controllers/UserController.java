@@ -1,6 +1,9 @@
 package com.reservation.controllers;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -18,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.reservation.exception.ResourceNotFoundException;
 import com.reservation.models.security.BookingUser;
+import com.reservation.models.security.Role;
+import com.reservation.models.security.UserAvailability;
+import com.reservation.models.security.UserRole;
 import com.reservation.services.BookingUserService;
 import com.reservation.services.EmailService;
 
@@ -48,7 +54,19 @@ public class UserController {
 			@ApiParam(value = "User object to be stored in the database", required = true)
 			@Valid @RequestBody BookingUser user) throws Exception{
 		try {
-			userService.createUser(user, user.getUserRoles());
+			HashSet<UserRole> roles = new HashSet<UserRole>();
+			Role role = new Role();
+			role.setRole("ROLE_USER");
+			UserRole userRole = new UserRole(user, role);
+			roles.add(userRole);
+			Set<UserRole> userRoles = user.getUserRoles();
+			if(userRoles.isEmpty()) {
+				userService.createUser(user, roles);
+			}
+			else {
+				this.userService.createUser(user, user.getUserRoles());
+			}
+			
 			String html = "User with " + user.getUsername()+ " has been successfully created.";
 			emailService.sendHtml("naabin@outlook.com", user.getEmail(), "User Registration", html);
 			return ResponseEntity.ok().body("User registration successful.");
@@ -77,10 +95,16 @@ public class UserController {
 	@PostMapping("/checkuniqueuser")
 	public ResponseEntity<?> checkUniqueUserAvailability(@RequestParam(required = true, name = "username")String username){
 		boolean userAvailable = this.userService.uniqueUserAvailable(username.toLowerCase());
+		HashMap<String, Boolean> available = new HashMap<String, Boolean>();
+		available.put("available", false);
+		UserAvailability userAvailability = new UserAvailability(available);
 		if(userAvailable) {
-			return ResponseEntity.ok().body("username available");
+			available.put("available", true);
+			return ResponseEntity.ok().body(userAvailability);
 		}
-		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Username already exists");
+		available.put("available", false);
+		
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(userAvailability);
 	}
 	
 	

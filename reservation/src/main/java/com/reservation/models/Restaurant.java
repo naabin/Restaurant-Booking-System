@@ -12,8 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.reservation.models.security.BookingUser;
 
 import io.swagger.annotations.ApiModel;
 
@@ -35,11 +38,14 @@ public class Restaurant extends Auditable {
 	@NotNull
 	private String phoneNumber;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "restaurant")
 	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "restaurant")
 	private List<Reservation> bookings = new ArrayList<Reservation>();
+	
+	@OneToOne
+	private BookingUser user;
 	
 
 	public Long getId() {
@@ -89,6 +95,16 @@ public class Restaurant extends Auditable {
 	public void setBookings(List<Reservation> bookings) {
 		this.bookings = bookings;
 	}
+
+	public BookingUser getUser() {
+		return user;
+	}
+
+	public void setUser(BookingUser user) {
+		this.user = user;
+	}
+	
+	
 	
 	
 

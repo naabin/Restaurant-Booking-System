@@ -1,20 +1,13 @@
 package com.reservation.controllers;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -50,34 +43,34 @@ class ReservationControllerTest {
 		
 		mockMvc = MockMvcBuilders.standaloneSetup(reservationContoller).build();
 	}
-	@Test
-	void testGetAllReservation() throws Exception {
-		when(reservationService.getAllReservations()).thenReturn(reservations);
-		
-		mockMvc.perform(get("/api/reservation/all"))
-			.andExpect(status().isOk());
-		
-		
-		assertTrue(reservations.size() > 0);
-		assertEquals(3, reservations.size());
-			
-	}
-
-	@Test
-	void testGetReservationById() throws Exception {
-		Reservation reservation = new Reservation();
-		reservation.setId(ID);
-		
-		when(reservationService.findById(Mockito.anyLong())).thenReturn(Optional.of(reservation));
-		
-		mockMvc.perform(get("/api/reservation/1"))
-			.andExpect(status().isOk());
-		
-		
-		assertNotNull(reservation);
-		assertEquals(ID, reservation.getId());
-		
-	}
+//	@Test
+//	void testGetAllReservation() throws Exception {
+//		when(reservationService.getAllReservations()).thenReturn(reservations);
+//		
+//		mockMvc.perform(get("/api/reservation/all"))
+//			.andExpect(status().isOk());
+//		
+//		
+//		assertTrue(reservations.size() > 0);
+//		assertEquals(3, reservations.size());
+//			
+//	}
+//
+//	@Test
+//	void testGetReservationById() throws Exception {
+//		Reservation reservation = new Reservation();
+//		reservation.setId(ID);
+//		
+//		when(reservationService.findById(Mockito.anyLong())).thenReturn(Optional.of(reservation));
+//		
+//		mockMvc.perform(get("/api/reservation/1"))
+//			.andExpect(status().isOk());
+//		
+//		
+//		assertNotNull(reservation);
+//		assertEquals(ID, reservation.getId());
+//		
+//	}
 
 	@Test
 	void testCreateReservation() throws Exception {
