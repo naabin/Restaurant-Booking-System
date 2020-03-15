@@ -74,7 +74,7 @@ public class RestautantController {
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateRestaurant(@PathVariable("id") Long id) throws ResourceNotFoundException{
 		Restaurant restaurant = this.restaurantService.findRestaurantById(id).orElseThrow(() -> new ResourceNotFoundException("resource could not be found"));
-		this.restaurantService.updateRestaurant(restaurant, null);
+		this.restaurantService.updateRestaurant(restaurant);
 		
 		return ResponseEntity.ok().body("Restaurant successfully updated.");
 	}

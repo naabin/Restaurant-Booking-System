@@ -69,7 +69,7 @@ public class UserController {
 			
 			String html = "User with " + user.getUsername()+ " has been successfully created.";
 			emailService.sendHtml("naabin@outlook.com", user.getEmail(), "User Registration", html);
-			return ResponseEntity.ok().body("User registration successful.");
+			return ResponseEntity.ok().body(user);
 		} catch (Exception e) {
 			throw new Exception("Internal sever error.");
 		}

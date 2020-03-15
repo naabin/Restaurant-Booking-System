@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+
 public class JwtResponse implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -14,9 +15,21 @@ public class JwtResponse implements Serializable {
 	private final String firstName;
 	private final String lastName;
 	private final String email;
+	private Long restaurantId;
 	private Set<UserRole> userRoles = new HashSet<UserRole>();
 
 
+	public JwtResponse(String jwtToken, Long id, String firstName, String lastName, String email,
+			Set<UserRole> userRoles,Long restaurantId) {
+		this.jwtToken = jwtToken;
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.userRoles = userRoles;
+		this.restaurantId =restaurantId;
+	}
+	
 	public JwtResponse(String jwtToken, Long id, String firstName, String lastName, String email,
 			Set<UserRole> userRoles) {
 		this.jwtToken = jwtToken;
@@ -55,6 +68,9 @@ public class JwtResponse implements Serializable {
 		return userRoles;
 	}
 	
+	public Long getRestaurantId() {
+		return restaurantId;
+	}
 	
 	
 	

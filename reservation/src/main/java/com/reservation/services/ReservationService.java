@@ -13,6 +13,8 @@ public interface ReservationService {
 	
 	List<Reservation> getAllReservations();
 	
+	List<Reservation> getReservations(Long restaurantId);
+	
 	Optional<Reservation> findById(Long id);
 	
 	void deleteReservationById(Long id);

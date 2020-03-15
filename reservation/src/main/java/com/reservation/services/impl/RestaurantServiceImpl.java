@@ -40,6 +40,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> openingHours) {
 		for (OpeningHours openingHour : openingHours) {
 			openingHour.setRestaurant(restaurant);
+	
 			this.openingHoursRepository.save(openingHour);
 		}
 		if(restaurant.getUser() != null) {
@@ -56,16 +57,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public Restaurant updateRestaurant(Restaurant restaurant, Reservation reservation) {
+	public Restaurant updateRestaurant(Restaurant restaurant) {
 		Set<OpeningHours> openingHours = restaurant.getOpeningHours();
 		for (OpeningHours openingHour : openingHours) {
 			this.openingHoursRepository.saveAndFlush(openingHour);
 		}
-
-		Reservation updatedReservation = this.reservationService.updateReservation(reservation);
-	
 		restaurant.getOpeningHours().addAll(openingHours);
-		restaurant.getBookings().add(updatedReservation);
 		return this.restaurantRepository.saveAndFlush(restaurant);
 	}
 

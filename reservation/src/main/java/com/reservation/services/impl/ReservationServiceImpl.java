@@ -53,4 +53,10 @@ public class ReservationServiceImpl implements ReservationService {
 
 	}
 
+	@Override
+	public List<Reservation> getReservations(Long restaurantId) {
+		
+		return this.reservationRepository.findReservationByRestaurantId(restaurantId);
+	}
+
 }

@@ -53,15 +53,6 @@ public class BookingUser implements UserDetails {
 	@Column
 	private String password;
 	
-	
-	
-	public Restaurant getRestaurant() {
-		return restaurant;
-	}
-
-	public void setRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
-	}
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<UserRole> userRoles = new HashSet<UserRole>();
@@ -180,6 +171,13 @@ public class BookingUser implements UserDetails {
 		this.email = email;
 	}
 	
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
 	
 	
 	

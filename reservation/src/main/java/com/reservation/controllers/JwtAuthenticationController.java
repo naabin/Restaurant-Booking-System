@@ -62,14 +62,31 @@ public class JwtAuthenticationController {
 		BookingUser username = this.userService.loadUserByUsername(authenticationRequest.getUsername());		
 		
 		final String token = this.jwtTokenUtil.generateToken(userDetails);
-	
-		return ResponseEntity.ok().body(
-				new JwtResponse(token, 
-						username.getId(), 
-						username.getFirstName(), 
-						username.getLastName(), 
-						username.getEmail(),
-						username.getUserRoles()));
+		
+		if(username.getRestaurant() != null) {
+			final Long restaurantId = username.getRestaurant().getId();
+			return ResponseEntity.ok().body(
+					new JwtResponse(token, 
+							username.getId(), 
+							username.getFirstName(), 
+							username.getLastName(), 
+							username.getEmail(),
+							username.getUserRoles(),
+							restaurantId
+							));
+		}
+		else {
+			return ResponseEntity.ok().body(
+					new JwtResponse(token, 
+							username.getId(), 
+							username.getFirstName(), 
+							username.getLastName(), 
+							username.getEmail(),
+							username.getUserRoles()
+							));
+		}
+		
+
 	}
 	
 	

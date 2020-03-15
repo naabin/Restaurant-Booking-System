@@ -1,10 +1,12 @@
 package com.reservation.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.reservation.exception.ResourceNotFoundException;
 import com.reservation.models.Reservation;
 import com.reservation.models.Restaurant;
+import com.reservation.models.security.BookingUser;
+import com.reservation.services.BookingUserService;
 import com.reservation.services.ReservationService;
 import com.reservation.services.RestaurantService;
 
@@ -34,10 +38,15 @@ public class ReservationController {
 	
 	private final ReservationService reservationService;
 	private final RestaurantService restaurantService;
+	private final BookingUserService userService;
 	
-	public ReservationController(ReservationService reservationService, RestaurantService restaurantService) {
+	public ReservationController(
+			ReservationService reservationService, 
+			RestaurantService restaurantService,
+			BookingUserService userService) {
 		this.reservationService = reservationService;
-		this.restaurantService = restaurantService;	
+		this.restaurantService = restaurantService;
+		this.userService = userService;
 	}
 	@ApiOperation(value = "View all the list of reservations", response = List.class)
 	@ApiResponses(value = {
@@ -47,15 +56,21 @@ public class ReservationController {
 			@ApiResponse(code = 404, message = "The resource you were trying to find is either unavailabe or not found.")
 	})
 	@GetMapping("/all")
-	public ResponseEntity<List<Reservation>> getAllReservation(@RequestParam("restaurantId") long restaurantId) throws ResourceNotFoundException{
+	public ResponseEntity<List<Reservation>> getAllReservation(
+			@RequestParam(name = "restaurantId", required = true) Long restaurantId, 
+			@RequestParam(name = "userId", required = true) Long userId) throws ResourceNotFoundException{
+		
+		BookingUser user = this.userService.findUserById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		
+		Long usersRestaurantId = user.getRestaurant().getId();
 		
 		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
 				
-		if(restaurant.getId().equals(restaurantId)) {
-			return ResponseEntity.ok().body(restaurant.getBookings());
+		if(usersRestaurantId.equals(restaurant.getId())) {
+			return ResponseEntity.ok().body(this.reservationService.getReservations(restaurantId));
 		}
 		else {
-			return ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().build();
 		}
 		
 		
@@ -73,7 +88,7 @@ public class ReservationController {
 			return ResponseEntity.ok().body(reservation);
 		}
 		else {
-			return ResponseEntity.badRequest().body(null);
+			return ResponseEntity.badRequest().body(reservation);
 		}
 		
 		
@@ -88,8 +103,10 @@ public class ReservationController {
 		
 		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
 		reservation.setRestaurant(restaurant);
-		this.restaurantService.updateRestaurant(restaurant, reservation);
-		return ResponseEntity.ok().body("Reservation is created");
+		this.reservationService.createReservation(reservation);
+		HashMap<String, Long> resId = new HashMap<String, Long>();
+		resId.put("restaurantId", restaurant.getId());
+		return ResponseEntity.ok().body(resId);
 
 	}
 	
