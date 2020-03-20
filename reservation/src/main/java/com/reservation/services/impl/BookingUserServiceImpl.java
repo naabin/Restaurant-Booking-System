@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,7 @@ import com.reservation.securityconfig.PasswordEncrypt;
 import com.reservation.services.BookingUserService;
 
 @Service
-public class BookingUserServiceImpl implements BookingUserService, UserDetailsService {
+public class BookingUserServiceImpl implements BookingUserService{
 
 	private static final Logger LOG = LoggerFactory.getLogger(BookingUserServiceImpl.class);
 
@@ -41,7 +40,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	@Override
 	@Transactional
 	public BookingUser createUser(BookingUser user, Set<UserRole> userRoles) {
-		BookingUser localUser = this.userRepo.findByUsername(user.getUsername());
+		BookingUser localUser = this.userRepo.findByEmail(user.getEmail());
 
 		if (localUser != null) {
 			LOG.info("User with username" + user.getUsername() + " already exists. ");
@@ -61,13 +60,13 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 	}
 
 	@Override
-	public BookingUser loadUserByUsername(String username) {
+	public BookingUser loadUserByEmail(String email) {
 
-		BookingUser user = userRepo.findByUsername(username);
+		BookingUser user = userRepo.findByEmail(email);
 		if (user == null) {
-			LOG.warn("User {} not found with username " + username);
+			LOG.warn("User {} not found with email " + email);
 
-			throw new UsernameNotFoundException(username + " not found");
+			throw new UsernameNotFoundException(email + " not found");
 		}
 
 		return user;
@@ -93,7 +92,7 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 
 	@Override
 	public boolean uniqueUserAvailable(String username) {
-		BookingUser findByUsername = this.userRepo.findByUsername(username);
+		BookingUser findByUsername = this.userRepo.findUserByUsername(username);
 		return !(findByUsername != null && findByUsername.getUsername().equals(username));
 	}
 
@@ -105,5 +104,29 @@ public class BookingUserServiceImpl implements BookingUserService, UserDetailsSe
 		user.getUserRoles().addAll(userRoles);
 		return this.userRepo.saveAndFlush(user);
 	}
+
+	@Override
+	public BookingUser loadUserByUsername(String username) throws UsernameNotFoundException {
+		BookingUser user = this.userRepo.findByEmail(username);
+		if(user == null) {
+			LOG.warn("User {} not found with username " + username);
+
+			throw new UsernameNotFoundException(username + " not found");
+		}
+		return user;
+	}
+
+	@Override
+	public boolean uniqueEmailAvailable(String email) {
+		BookingUser findByEmail = this.userRepo.findByEmail(email);
+		return !(findByEmail != null && findByEmail.getEmail().equals(email));
+	}
+
+	@Override
+	public Optional<BookingUser> findUserByResetPin(Integer pin) {
+
+		return this.userRepo.findUserByResetPin(pin);
+	}
+
 
 }

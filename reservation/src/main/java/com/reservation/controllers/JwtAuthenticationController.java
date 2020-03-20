@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +32,17 @@ public class JwtAuthenticationController {
 
 	private final BookingUserService userService;
 	
+
 	
 
-	public JwtAuthenticationController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil,
+	public JwtAuthenticationController(
+			AuthenticationManager authenticationManager, 
+			JwtTokenUtil jwtTokenUtil,
 			BookingUserService userService) {
-
 		this.authenticationManager = authenticationManager;
 		this.jwtTokenUtil = jwtTokenUtil;
 		this.userService = userService;
+		
 		
 	}
 	
@@ -49,7 +51,7 @@ public class JwtAuthenticationController {
 	public ResponseEntity<?> createAuthenticationToken(
 			@Valid @RequestBody JwtRequest authenticationRequest ) throws Exception{
 		
-		final UserDetails userDetails = this.userService.loadUserByUsername(authenticationRequest.getUsername());
+		final BookingUser userDetails = this.userService.loadUserByEmail(authenticationRequest.getUsername());
 		
 		if(userDetails == null) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid credential provided");
@@ -59,7 +61,7 @@ public class JwtAuthenticationController {
 		
 		
 		
-		BookingUser username = this.userService.loadUserByUsername(authenticationRequest.getUsername());		
+		BookingUser username = this.userService.loadUserByEmail(authenticationRequest.getUsername());		
 		
 		final String token = this.jwtTokenUtil.generateToken(userDetails);
 		
@@ -92,7 +94,7 @@ public class JwtAuthenticationController {
 	
 	private void authenticate(String username, String password) throws Exception{
 		try {
-			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken( username, password));
+			this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 		} catch (DisabledException exception) {
 			throw new Exception("USER DISABLED", exception);
 		}

@@ -12,11 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.reservation.models.security.BookingUser;
 import com.reservation.services.BookingUserService;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -68,7 +68,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		
 		//Once we get we validate the token
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.userService.loadUserByUsername(username);
+			final BookingUser userDetails = this.userService.loadUserByEmail(username);
 			
 			//If token is valid configure Spring Security to manually set
 			if(this.jwtTokenUtil.validateToken(jwtToken, userDetails)) {

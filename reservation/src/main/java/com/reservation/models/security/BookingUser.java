@@ -40,7 +40,7 @@ public class BookingUser implements UserDetails {
 	@Column
 	private String lastName;
 	
-	@Column
+	@Column(unique = true)
 	@Email
 	@NotEmpty(message = "Email field cannot be empty")
 	private String email;
@@ -52,6 +52,9 @@ public class BookingUser implements UserDetails {
 	
 	@Column
 	private String password;
+	
+	@Column
+	private Integer resetPin;
 	
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -177,6 +180,14 @@ public class BookingUser implements UserDetails {
 
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
+	}
+
+	public Integer getResetPin() {
+		return resetPin;
+	}
+
+	public void setResetPin(Integer resetPin) {
+		this.resetPin = resetPin;
 	}
 	
 	
