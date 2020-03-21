@@ -7,8 +7,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.reservation.models.security.BookingUser;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -47,15 +48,15 @@ public class JwtTokenUtil implements Serializable {
 	}
 	
 	//Check if token has expired
-	private Boolean isTokenExpired(String token) {
+	public Boolean isTokenExpired(String token) {
 		final Date expiration = getExpirationDateFromDToken(token);
 		return expiration.before(new Date());
 	}
 	
 	//Generate token for user
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(BookingUser userDetails) {
 		Map<String, Object> claims = new HashMap<String, Object>();
-		return doGenerateToken(claims, userDetails.getUsername());
+		return doGenerateToken(claims, userDetails.getEmail());
 	}
 
 	/*
@@ -74,9 +75,9 @@ public class JwtTokenUtil implements Serializable {
 	}
 	
 	
-	public Boolean validateToken(String token, UserDetails userDetails) {
+	public Boolean validateToken(String token, BookingUser userDetails) {
 		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		return (username.equals(userDetails.getEmail()) && !isTokenExpired(token));
 	}
 	
 	

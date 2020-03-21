@@ -45,11 +45,18 @@ public class UserController {
 	private final EmailService emailService;
 
 	private final PasswordEncrypt passwordEncrypt;
+	
+	
 
-	public UserController(BookingUserService userService, EmailService emailService, PasswordEncrypt passwordEncrypt) {
+	public UserController(
+			BookingUserService userService, 
+			EmailService emailService, 
+			PasswordEncrypt passwordEncrypt ) {
+		
 		this.userService = userService;
 		this.emailService = emailService;
 		this.passwordEncrypt = passwordEncrypt;
+		
 
 	}
 
@@ -180,7 +187,7 @@ public class UserController {
 		userService.deleteUserById(id);
 		return ResponseEntity.ok().body("Resource deleted successfully.");
 	}
-
+	
 	@PostMapping("/logout")
 	@ApiOperation(value = "User logout API. However it does not guarantee that the token will expire and become invalid.")
 	public ResponseEntity<?> logout() {

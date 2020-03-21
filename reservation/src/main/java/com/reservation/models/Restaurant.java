@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -37,16 +38,21 @@ public class Restaurant extends Auditable {
 
 	@NotNull
 	private String phoneNumber;
+	
+	@Column
+	private String siteAddress;
+	
+	@Column
+	private String email;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "restaurant")
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "restaurantOpeningHours")
 	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
-	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "restaurant")
+
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "restaurant")
 	private List<Reservation> bookings = new ArrayList<Reservation>();
-	
+
 	@OneToOne
 	private BookingUser user;
-	
 
 	public Long getId() {
 		return id;
@@ -80,6 +86,22 @@ public class Restaurant extends Auditable {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public String getSiteAddress() {
+		return siteAddress;
+	}
+
+	public void setSiteAddress(String siteAddress) {
+		this.siteAddress = siteAddress;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Set<OpeningHours> getOpeningHours() {
 		return openingHours;
 	}
@@ -103,9 +125,5 @@ public class Restaurant extends Auditable {
 	public void setUser(BookingUser user) {
 		this.user = user;
 	}
-	
-	
-	
-	
 
 }

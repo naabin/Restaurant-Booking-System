@@ -38,7 +38,7 @@ public class OpeningHours {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
-	private Restaurant restaurant;
+	private Restaurant restaurantOpeningHours;
 
 	public void setId(Long id) {
 		this.id = id;
@@ -68,13 +68,14 @@ public class OpeningHours {
 		this.openUntil = openUntil;
 	}
 
-	public Restaurant getRestaurant() {
-		return restaurant;
+	public Restaurant getRestaurantOpeningHours() {
+		return restaurantOpeningHours;
 	}
 
-	public void setRestaurant(Restaurant restaurant) {
-		this.restaurant = restaurant;
+	public void setRestaurantOpeningHours(Restaurant restaurantOpeningHours) {
+		this.restaurantOpeningHours = restaurantOpeningHours;
 	}
 
+	
 
 }

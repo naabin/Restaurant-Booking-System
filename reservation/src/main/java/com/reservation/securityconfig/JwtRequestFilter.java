@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -32,8 +33,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	
 	private final JwtTokenUtil jwtTokenUtil;
 	
+	@Autowired
 	public JwtRequestFilter(BookingUserService userService, JwtTokenUtil jwtTokenUtil) {
-		
 		this.userService = userService;
 		this.jwtTokenUtil = jwtTokenUtil;
 	}
@@ -59,7 +60,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				System.out.println("Unable to get JWT Token");
 			}
 			catch (ExpiredJwtException e) {
+				response.sendError(401, "Token has expired");
 				System.out.println("JWT Token has expired");
+				return;
 			}
 		}
 		else {

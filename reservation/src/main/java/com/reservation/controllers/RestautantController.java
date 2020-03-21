@@ -52,6 +52,7 @@ public class RestautantController {
 		Restaurant restaurant = this.restaurantService.findRestaurantById(id).orElseThrow(() ->
 				new ResourceNotFoundException("Restaurant with an id " + id  +" could not be found."));
 		if(restaurant.getUser().getId().equals(userId)) {
+			restaurant.setOpeningHours(restaurant.getOpeningHours());
 			return ResponseEntity.ok().body(restaurant);
 		}
 		else {
@@ -72,11 +73,28 @@ public class RestautantController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateRestaurant(@PathVariable("id") Long id) throws ResourceNotFoundException{
-		Restaurant restaurant = this.restaurantService.findRestaurantById(id).orElseThrow(() -> new ResourceNotFoundException("resource could not be found"));
-		this.restaurantService.updateRestaurant(restaurant);
-		
-		return ResponseEntity.ok().body("Restaurant successfully updated.");
+	public ResponseEntity<?> updateRestaurant(@PathVariable("id")Long id, @RequestBody Restaurant restaurant) throws ResourceNotFoundException{
+		Restaurant updadingRestaurant = this.restaurantService.findRestaurantById(id).orElseThrow(() -> new ResourceNotFoundException("resource could not be found"));
+		if(restaurant.getName() != null) {
+			updadingRestaurant.setName(restaurant.getName());
+		}
+		if(restaurant.getPhoneNumber() != null) {
+			updadingRestaurant.setPhoneNumber(restaurant.getPhoneNumber());
+		}
+		if(restaurant.getAddress() != null) {
+			updadingRestaurant.setAddress(restaurant.getAddress());
+		}
+		if(restaurant.getEmail() != null) {
+			updadingRestaurant.setEmail(restaurant.getEmail());
+		}
+		if(restaurant.getSiteAddress() != null) {
+			updadingRestaurant.setSiteAddress(restaurant.getSiteAddress());
+		}
+		if(!restaurant.getOpeningHours().isEmpty()) {
+			updadingRestaurant.setOpeningHours(restaurant.getOpeningHours());
+		}
+		this.restaurantService.updateRestaurant(updadingRestaurant);
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}")

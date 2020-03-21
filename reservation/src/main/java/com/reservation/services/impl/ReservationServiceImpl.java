@@ -13,7 +13,7 @@ import com.reservation.services.ReservationService;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-	private ReservationRepository reservationRepository;
+	private final ReservationRepository reservationRepository;
 
 	public ReservationServiceImpl(ReservationRepository reservationRepository) {
 		this.reservationRepository = reservationRepository;

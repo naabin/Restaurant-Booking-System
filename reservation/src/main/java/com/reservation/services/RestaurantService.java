@@ -8,7 +8,7 @@ import com.reservation.models.OpeningHours;
 import com.reservation.models.Restaurant;
 
 public interface RestaurantService {
-	Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> openingHours);
+	Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> list);
 	Restaurant updateRestaurant(Restaurant restaurant);
 	List<Restaurant> getAllRestaurants();
 	Optional<Restaurant> findRestaurantById(Long id);

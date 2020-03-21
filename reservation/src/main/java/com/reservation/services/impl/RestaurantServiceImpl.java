@@ -9,13 +9,11 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.reservation.models.OpeningHours;
-import com.reservation.models.Reservation;
 import com.reservation.models.Restaurant;
 import com.reservation.models.security.BookingUser;
 import com.reservation.repositories.OpeningHoursRepository;
 import com.reservation.repositories.RestaurantRepository;
 import com.reservation.services.BookingUserService;
-import com.reservation.services.ReservationService;
 import com.reservation.services.RestaurantService;
 
 @Service
@@ -23,15 +21,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	private final RestaurantRepository restaurantRepository;
 	private final OpeningHoursRepository openingHoursRepository;
-	private final ReservationService reservationService;
 	private final BookingUserService userService;
 
 	public RestaurantServiceImpl(RestaurantRepository restaurantRepository,
-			OpeningHoursRepository openingHoursRepository, ReservationService reservationService,
+			OpeningHoursRepository openingHoursRepository, 
 			BookingUserService userService) {
 		this.restaurantRepository = restaurantRepository;
 		this.openingHoursRepository = openingHoursRepository;
-		this.reservationService = reservationService;
 		this.userService = userService;
 	}
 
@@ -39,7 +35,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Transactional
 	public Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> openingHours) {
 		for (OpeningHours openingHour : openingHours) {
-			openingHour.setRestaurant(restaurant);
+			openingHour.setRestaurantOpeningHours(restaurant);
 	
 			this.openingHoursRepository.save(openingHour);
 		}

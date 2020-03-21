@@ -11,7 +11,6 @@ import com.reservation.models.security.Role;
 import com.reservation.models.security.UserRole;
 import com.reservation.services.BookingUserService;
 import com.reservation.services.ReservationService;
-import com.reservation.services.RestaurantService;
 
 @Component
 public class BoostrapDataLoader implements CommandLineRunner {
@@ -19,16 +18,16 @@ public class BoostrapDataLoader implements CommandLineRunner {
 //	private  ReservationService reservationService;
 
 	private final BookingUserService bookingUserService;
-	
-	private final RestaurantService restaurantService;
 
-	public BoostrapDataLoader(ReservationService reservationService, 
-			BookingUserService bookingUserService,
-			RestaurantService restaurantService) {
+
+	public BoostrapDataLoader(
+			ReservationService reservationService, 
+			BookingUserService bookingUserService
+			) {
 
 //		this.reservationService = reservationService;
 		this.bookingUserService = bookingUserService;
-		this.restaurantService = restaurantService;
+
 	}
 
 	@Override
