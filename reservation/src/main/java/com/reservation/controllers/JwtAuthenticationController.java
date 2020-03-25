@@ -28,6 +28,7 @@ import com.reservation.services.BookingUserService;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
+@RequestMapping("/api/auth")
 public class JwtAuthenticationController {
 
 	private final AuthenticationManager authenticationManager;

@@ -2,8 +2,8 @@ package com.reservation.controllers;
 
 
 
-import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,9 +39,13 @@ public class RestautantController {
 	}
 	
 	
-	@GetMapping("/all")
-	public ResponseEntity<List<Restaurant>> getAllRestaurant(){
-		List<Restaurant> allRestaurants = this.restaurantService.getAllRestaurants();
+	@GetMapping
+	public ResponseEntity<Page<Restaurant>> getAllRestaurant(
+			@RequestParam( name = "pageNumber", defaultValue = "0" )Integer pageNumber,
+			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+			@RequestParam(name = "search") String searchQuery
+			){
+		Page<Restaurant> allRestaurants = this.restaurantService.getAllRestaurants(pageNumber, pageSize, searchQuery);
 		
 		return ResponseEntity.ok().body(allRestaurants);
 	}
@@ -64,7 +68,9 @@ public class RestautantController {
 	
 	
 	@PostMapping("/new")
-	public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant, @RequestParam(name = "userId", required = true)Long userId){
+	public ResponseEntity<Restaurant> createRestaurant(
+			@RequestBody Restaurant restaurant, 
+			@RequestParam(name = "userId", required = true)Long userId){
 		BookingUser user = this.userService.findUserById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 			restaurant.setUser(user);
 			Restaurant createdRestaurant = this.restaurantService.createRestaurant(restaurant, restaurant.getOpeningHours());
@@ -92,6 +98,9 @@ public class RestautantController {
 		}
 		if(!restaurant.getOpeningHours().isEmpty()) {
 			updadingRestaurant.setOpeningHours(restaurant.getOpeningHours());
+		}
+		if(restaurant.getAbout() != null) {
+			updadingRestaurant.setAbout(restaurant.getAbout());
 		}
 		this.restaurantService.updateRestaurant(updadingRestaurant);
 		return ResponseEntity.ok().build();

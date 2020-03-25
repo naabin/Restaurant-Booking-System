@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,10 +56,14 @@ public class ReservationController {
 			@ApiResponse(code = 403, message = "Accessing the resource you were trying to access is forbidden"),
 			@ApiResponse(code = 404, message = "The resource you were trying to find is either unavailabe or not found.")
 	})
-	@GetMapping("/all")
-	public ResponseEntity<List<Reservation>> getAllReservation(
+	@GetMapping
+	public ResponseEntity<Page<Reservation>> getAllReservation(
 			@RequestParam(name = "restaurantId", required = true) Long restaurantId, 
-			@RequestParam(name = "userId", required = true) Long userId) throws ResourceNotFoundException{
+			@RequestParam(name = "userId", required = true) Long userId,
+			@RequestParam(name = "pageNumber", required = false, defaultValue = "0")Integer pageNumber,
+			@RequestParam(name = "pageSize", required = false, defaultValue = "10")Integer pageSize,
+			@RequestParam(name = "sortBy", required = false, defaultValue = "date")String date
+			) throws ResourceNotFoundException{
 		
 		BookingUser user = this.userService.findUserById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		
@@ -67,7 +72,7 @@ public class ReservationController {
 		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
 				
 		if(usersRestaurantId.equals(restaurant.getId())) {
-			return ResponseEntity.ok().body(this.reservationService.getReservations(restaurantId));
+			return ResponseEntity.ok().body(this.reservationService.getReservations(usersRestaurantId, pageNumber, pageSize, date));
 		}
 		else {
 			return ResponseEntity.badRequest().build();
@@ -94,7 +99,7 @@ public class ReservationController {
 		
 	}
 	
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<?> createReservation(
 			@ApiParam(value = "Reservation object store in a database table", required = true)
 			@Valid 

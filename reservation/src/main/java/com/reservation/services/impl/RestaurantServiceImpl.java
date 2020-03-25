@@ -1,11 +1,12 @@
 package com.reservation.services.impl;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.reservation.models.OpeningHours;
@@ -63,9 +64,16 @@ public class RestaurantServiceImpl implements RestaurantService {
 	}
 
 	@Override
-	public List<Restaurant> getAllRestaurants() {
+	public Page<Restaurant> getAllRestaurants(Integer pageNumber, Integer pageSize, String restaurantName) {
+		PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+		if(restaurantName != null) {
+			return this.restaurantRepository.findAllByName(restaurantName, pageRequest);
+		}
+		else {
+			Page<Restaurant> restuarant = this.restaurantRepository.findAll(pageRequest);
+			return restuarant;
+		}
 
-		return this.restaurantRepository.findAll();
 	}
 
 	@Override
@@ -89,6 +97,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 			this.restaurantRepository.delete(restaurant);
 		}
 
+	}
+
+	@Override
+	public Optional<Restaurant> findRestaurant(String restaurantName) {
+		return this.restaurantRepository.findRestaurantByName(restaurantName);
 	}
 
 }

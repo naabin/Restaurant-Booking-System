@@ -22,6 +22,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.reservation.models.Restaurant;
 
 @Entity
@@ -89,6 +91,7 @@ public class BookingUser implements UserDetails {
 
 
 	@Override
+	@JsonProperty(value = "password", access = Access.WRITE_ONLY)
 	public String getPassword() {
 
 		return this.password;

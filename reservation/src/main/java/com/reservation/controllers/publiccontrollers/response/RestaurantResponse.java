@@ -18,10 +18,12 @@ public class RestaurantResponse implements Serializable {
 	private String email;
 	private String phoneNumber;
 	private String siteAddress;
+	private String about;
 	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
 	
 	
 	public RestaurantResponse(Long id, String name, String email, String phoneNumber, String siteAddress,
+			String about,
 			Set<OpeningHours> openingHours) {
 		
 		this.id = id;
@@ -29,6 +31,7 @@ public class RestaurantResponse implements Serializable {
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.siteAddress = siteAddress;
+		this.about = about;
 		this.openingHours = openingHours;
 	}
 
@@ -90,6 +93,16 @@ public class RestaurantResponse implements Serializable {
 
 	public void setOpeningHours(Set<OpeningHours> openingHours) {
 		this.openingHours = openingHours;
+	}
+
+
+	public String getAbout() {
+		return about;
+	}
+
+
+	public void setAbout(String about) {
+		this.about = about;
 	}
 	
 	

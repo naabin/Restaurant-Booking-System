@@ -1,7 +1,6 @@
 package com.reservation.models;
 
-
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,15 +26,17 @@ public class OpeningHours {
 	private String dayOfWeek;
 
 	@Column
-	private LocalDateTime openFrom;;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXX")
+	private OffsetDateTime openFrom;
 
 	@Column
-	private LocalDateTime openUntil;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXX")
+	private OffsetDateTime openUntil;
 
 	public Long getId() {
 		return id;
 	}
-	
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn
@@ -52,19 +54,19 @@ public class OpeningHours {
 		this.dayOfWeek = dayOfWeek;
 	}
 
-	public LocalDateTime getOpenFrom() {
+	public OffsetDateTime getOpenFrom() {
 		return openFrom;
 	}
 
-	public void setOpenFrom(LocalDateTime openFrom) {
+	public void setOpenFrom(OffsetDateTime openFrom) {
 		this.openFrom = openFrom;
 	}
 
-	public LocalDateTime getOpenUntil() {
+	public OffsetDateTime getOpenUntil() {
 		return openUntil;
 	}
 
-	public void setOpenUntil(LocalDateTime openUntil) {
+	public void setOpenUntil(OffsetDateTime openUntil) {
 		this.openUntil = openUntil;
 	}
 
@@ -75,7 +77,5 @@ public class OpeningHours {
 	public void setRestaurantOpeningHours(Restaurant restaurantOpeningHours) {
 		this.restaurantOpeningHours = restaurantOpeningHours;
 	}
-
-	
 
 }

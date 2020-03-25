@@ -1,7 +1,7 @@
 package com.reservation.models;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.annotations.ApiModel;
@@ -56,11 +57,12 @@ public class Reservation  extends Auditable{
 	
 	@ApiModelProperty(notes = "Time of reservation")
 	@Column(name = "time")
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXX")
 	@NotNull
-	private LocalDateTime time;
+	private OffsetDateTime time;
 
 	@ApiModelProperty(notes = "Special request of made for reservation")
-	@Column(name = "special_request")
+	@Column(name = "special_request", columnDefinition = "text")
 	private String specialRequest;
 	
 	
@@ -79,11 +81,11 @@ public class Reservation  extends Auditable{
 		this.id = id;
 	}
 	
-	public LocalDateTime getTime() {
+	public OffsetDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(OffsetDateTime time) {
 		this.time = time;
 	}
 

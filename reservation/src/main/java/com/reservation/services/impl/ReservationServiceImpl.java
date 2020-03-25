@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.reservation.models.Reservation;
@@ -54,9 +57,12 @@ public class ReservationServiceImpl implements ReservationService {
 	}
 
 	@Override
-	public List<Reservation> getReservations(Long restaurantId) {
+	public Page<Reservation> getReservations(
+			Long restaurantId, Integer pageNumber, Integer pageSize, String properties) {
 		
-		return this.reservationRepository.findReservationByRestaurantId(restaurantId);
+		PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Direction.DESC, properties);
+		
+		return this.reservationRepository.findByRestaurantId(restaurantId, pageRequest);
 	}
 
 }

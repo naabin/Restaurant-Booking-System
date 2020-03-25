@@ -44,6 +44,13 @@ public class Restaurant extends Auditable {
 	
 	@Column
 	private String email;
+	
+	@Column(columnDefinition = "text")
+	private String about;
+	
+	@Column
+	private String generatedUrl;
+	
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "restaurantOpeningHours")
 	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
@@ -102,6 +109,14 @@ public class Restaurant extends Auditable {
 		this.email = email;
 	}
 
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}
+
 	public Set<OpeningHours> getOpeningHours() {
 		return openingHours;
 	}
@@ -125,5 +140,15 @@ public class Restaurant extends Auditable {
 	public void setUser(BookingUser user) {
 		this.user = user;
 	}
+
+	public String getGeneratedUrl() {
+		return generatedUrl;
+	}
+
+	public void setGeneratedUrl(String generatedUrl) {
+		this.generatedUrl = generatedUrl;
+	}
+	
+	
 
 }

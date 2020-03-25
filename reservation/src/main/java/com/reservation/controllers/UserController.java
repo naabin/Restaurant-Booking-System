@@ -60,7 +60,7 @@ public class UserController {
 
 	}
 
-	@PostMapping("/register")
+	@PostMapping
 	@ApiOperation(value = "Controller for user registration")
 	public ResponseEntity<?> userRegistration(
 			@ApiParam(value = "User object to be stored in the database", required = true) @Valid @RequestBody BookingUser user)
