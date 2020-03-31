@@ -1,6 +1,6 @@
 package com.reservation.models;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
@@ -11,6 +11,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable {
@@ -20,10 +22,12 @@ public abstract class Auditable {
 	private String createdBy;
 	
 	@CreatedDate
-	private LocalDateTime createdDate;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXX")
+	private OffsetDateTime createdDate;
 	
 	@LastModifiedDate
-	private LocalDateTime lastModifiedDate;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXX")
+	private OffsetDateTime lastModifiedDate;
 	
 	
 	@LastModifiedBy
@@ -40,22 +44,22 @@ public abstract class Auditable {
 	}
 
 
-	public LocalDateTime getCreatedDate() {
+	public OffsetDateTime getCreatedDate() {
 		return createdDate;
 	}
 
 
-	public void setCreatedDate(LocalDateTime createdDate) {
+	public void setCreatedDate(OffsetDateTime createdDate) {
 		this.createdDate = createdDate;
 	}
 
 
-	public LocalDateTime getLastModifiedDate() {
+	public OffsetDateTime getLastModifiedDate() {
 		return lastModifiedDate;
 	}
 
 
-	public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+	public void setLastModifiedDate(OffsetDateTime lastModifiedDate) {
 		this.lastModifiedDate = lastModifiedDate;
 	}
 

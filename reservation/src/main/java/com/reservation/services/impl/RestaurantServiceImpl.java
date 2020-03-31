@@ -25,8 +25,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 	private final BookingUserService userService;
 
 	public RestaurantServiceImpl(RestaurantRepository restaurantRepository,
-			OpeningHoursRepository openingHoursRepository, 
-			BookingUserService userService) {
+			OpeningHoursRepository openingHoursRepository, BookingUserService userService) {
 		this.restaurantRepository = restaurantRepository;
 		this.openingHoursRepository = openingHoursRepository;
 		this.userService = userService;
@@ -37,17 +36,17 @@ public class RestaurantServiceImpl implements RestaurantService {
 	public Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> openingHours) {
 		for (OpeningHours openingHour : openingHours) {
 			openingHour.setRestaurantOpeningHours(restaurant);
-	
+
 			this.openingHoursRepository.save(openingHour);
 		}
-		if(restaurant.getUser() != null) {
+		if (restaurant.getUser() != null) {
 			Optional<BookingUser> optionalUser = this.userService.findUserById(restaurant.getUser().getId());
-			if(optionalUser.isPresent()) {
+			if (optionalUser.isPresent()) {
 				BookingUser bookingUser = optionalUser.get();
 				bookingUser.setRestaurant(restaurant);
 				this.userService.updateUser(bookingUser, bookingUser.getUserRoles());
 			}
-			
+
 		}
 		restaurant.getOpeningHours().addAll(openingHours);
 		return this.restaurantRepository.save(restaurant);
@@ -56,9 +55,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public Restaurant updateRestaurant(Restaurant restaurant) {
 		Set<OpeningHours> openingHours = restaurant.getOpeningHours();
-		for (OpeningHours openingHour : openingHours) {
-			this.openingHoursRepository.saveAndFlush(openingHour);
+		if (!openingHours.isEmpty()) {
+			for (OpeningHours openingHour : openingHours) {
+				this.openingHoursRepository.saveAndFlush(openingHour);
+			}
 		}
+
 		restaurant.getOpeningHours().addAll(openingHours);
 		return this.restaurantRepository.saveAndFlush(restaurant);
 	}
@@ -66,10 +68,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 	@Override
 	public Page<Restaurant> getAllRestaurants(Integer pageNumber, Integer pageSize, String restaurantName) {
 		PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-		if(restaurantName != null) {
+		if (restaurantName != null) {
 			return this.restaurantRepository.findAllByName(restaurantName, pageRequest);
-		}
-		else {
+		} else {
 			Page<Restaurant> restuarant = this.restaurantRepository.findAll(pageRequest);
 			return restuarant;
 		}

@@ -1,5 +1,7 @@
 package com.reservation.controllers.publiccontrollers;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +29,15 @@ public class PublicReservationController {
 		this.reservationService = reservationService;
 	}
 	
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<?> createReservation(
 			@RequestParam("restaurant") String restaurnatName,
 			@RequestBody Reservation reservation) throws ResourceNotFoundException{
 		Restaurant restaurant = this.restaurantService.findRestaurant(restaurnatName)
 			.orElseThrow(() -> new ResourceNotFoundException("Restaurant could not be founds"));
+		reservation.setRestaurant(restaurant);
+		reservation.setCreatedBy(reservation.getFullName());
+		reservation.setCreatedDate(OffsetDateTime.now());
 		reservation.setRestaurant(restaurant);
 		this.reservationService.createReservation(reservation);
 		return ResponseEntity.ok().build();

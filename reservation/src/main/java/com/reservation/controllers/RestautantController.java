@@ -67,7 +67,7 @@ public class RestautantController {
 	}
 	
 	
-	@PostMapping("/new")
+	@PostMapping
 	public ResponseEntity<Restaurant> createRestaurant(
 			@RequestBody Restaurant restaurant, 
 			@RequestParam(name = "userId", required = true)Long userId){

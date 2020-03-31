@@ -58,6 +58,10 @@ public class Restaurant extends Auditable {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "restaurant")
 	private List<Reservation> bookings = new ArrayList<Reservation>();
 
+	
+	@OneToOne
+	private Image image;
+
 	@OneToOne
 	private BookingUser user;
 
@@ -148,6 +152,16 @@ public class Restaurant extends Auditable {
 	public void setGeneratedUrl(String generatedUrl) {
 		this.generatedUrl = generatedUrl;
 	}
+
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+	
+	
 	
 	
 

@@ -1,5 +1,6 @@
 package com.reservation.controllers;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 
@@ -107,6 +108,8 @@ public class ReservationController {
 			@RequestParam("restaurantId")Long restaurantId) throws ResourceNotFoundException{
 		
 		Restaurant restaurant = this.restaurantService.findRestaurantById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("No such restaurant found."));
+		reservation.setCreatedBy(restaurant.getUser().getFirstName());
+		reservation.setCreatedDate(OffsetDateTime.now());
 		reservation.setRestaurant(restaurant);
 		this.reservationService.createReservation(reservation);
 		HashMap<String, Long> resId = new HashMap<String, Long>();
