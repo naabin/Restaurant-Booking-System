@@ -3,6 +3,7 @@ package com.reservation.controllers;
 
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -99,14 +100,15 @@ public class JwtAuthenticationController {
 	@PostMapping("/validtoken")
 	public ResponseEntity<?> checkTokenExpiry(HttpServletRequest request){
 		String bearerToken = request.getHeader("Authorization");
+		Map<String, Boolean> isExpired = new HashMap<String, Boolean>();
 		if(bearerToken != null) {
 			String token = bearerToken.substring(7);
 			Boolean tokenExpiry = this.jwtTokenUtil.isTokenExpired(token);
-			return ResponseEntity.ok().body(new HashMap<String, Boolean>().put("tokenExpired", tokenExpiry));
+			isExpired.put("tokenExpired", tokenExpiry);
+			return ResponseEntity.ok().body(isExpired);
 		}
-		else {
-			return ResponseEntity.badRequest().build();
-		}
+		isExpired.put("tokenExpired", true);
+		return ResponseEntity.ok().body(isExpired);
 		
 	}
 	

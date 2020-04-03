@@ -24,6 +24,7 @@ import com.reservation.models.Reservation;
 import com.reservation.models.Restaurant;
 import com.reservation.models.security.BookingUser;
 import com.reservation.services.BookingUserService;
+import com.reservation.services.EmailService;
 import com.reservation.services.ReservationService;
 import com.reservation.services.RestaurantService;
 
@@ -41,14 +42,17 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	private final RestaurantService restaurantService;
 	private final BookingUserService userService;
+	private final EmailService emailService;
 	
 	public ReservationController(
 			ReservationService reservationService, 
 			RestaurantService restaurantService,
-			BookingUserService userService) {
+			BookingUserService userService,
+			EmailService emailService) {
 		this.reservationService = reservationService;
 		this.restaurantService = restaurantService;
 		this.userService = userService;
+		this.emailService = emailService;
 	}
 	@ApiOperation(value = "View all the list of reservations", response = List.class)
 	@ApiResponses(value = {
@@ -111,11 +115,26 @@ public class ReservationController {
 		reservation.setCreatedBy(restaurant.getUser().getFirstName());
 		reservation.setCreatedDate(OffsetDateTime.now());
 		reservation.setRestaurant(restaurant);
+		reservation.setConfimed(true);
 		this.reservationService.createReservation(reservation);
 		HashMap<String, Long> resId = new HashMap<String, Long>();
 		resId.put("restaurantId", restaurant.getId());
 		return ResponseEntity.ok().body(resId);
 
+	}
+	
+	@PostMapping("/sendconfirmation")
+	public ResponseEntity<?> sendConfirmationMessage(
+			@RequestBody String message,
+			@RequestParam(name = "reservationId", required = true)Long reservationId
+			) throws ResourceNotFoundException{
+		Reservation reservation = this.reservationService.findById(reservationId).orElseThrow(() -> new ResourceNotFoundException("Resource could not be found"));
+		reservation.setConfimed(true);
+		this.reservationService.updateReservation(reservation);
+		String ownerEmail = reservation.getRestaurant().getEmail();
+		String clientEmail = reservation.getEmail();
+		this.emailService.sendHtml(ownerEmail, clientEmail, "Confirmation message", message, null);
+		return ResponseEntity.ok().build();
 	}
 	
 	@PutMapping("/{id}")

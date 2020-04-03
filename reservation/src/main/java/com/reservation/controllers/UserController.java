@@ -79,7 +79,7 @@ public class UserController {
 			}
 
 			String html = "User with " + user.getUsername() + " has been successfully created.";
-			emailService.sendHtml("naabin@outlook.com", user.getEmail(), "User Registration", html);
+			emailService.sendHtml("naabin@outlook.com", user.getEmail(), "User Registration", html, null);
 			return ResponseEntity.ok().body(user);
 		} catch (Exception e) {
 			throw new Exception("Internal sever error.");
@@ -96,7 +96,7 @@ public class UserController {
 			user.setResetPin(randomInt);
 			this.userService.updateUser(user, user.getUserRoles());
 			String html = "Password reset token is " + randomInt;
-			this.emailService.sendHtml("naabin@outlook.com", email, "Password reset token", html);
+			this.emailService.sendHtml("naabin@outlook.com", email, "Password reset token", html, null);
 			return ResponseEntity.ok().body(new HashMap<String, Boolean>().put("email", true));
 		} else {
 			return ResponseEntity.badRequest().build();

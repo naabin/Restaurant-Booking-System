@@ -65,6 +65,9 @@ public class Reservation  extends Auditable{
 	@Column(name = "special_request", columnDefinition = "text")
 	private String specialRequest;
 	
+	@Column
+	private Boolean confimed;
+	
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -147,6 +150,15 @@ public class Reservation  extends Auditable{
 
 	public void setRestaurant(Restaurant restaurant) {
 		this.restaurant = restaurant;
+	}
+	
+
+	public Boolean getConfimed() {
+		return confimed;
+	}
+
+	public void setConfimed(Boolean confimed) {
+		this.confimed = confimed;
 	}
 
 	@Override

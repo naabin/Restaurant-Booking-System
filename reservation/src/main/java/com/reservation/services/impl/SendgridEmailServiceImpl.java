@@ -42,34 +42,26 @@ public class SendgridEmailServiceImpl implements EmailService{
 	}
 
 	@Override
-	public void sendHtml(String from, String to, String subject, String body) {
-		
-		Context context = new Context();
-		
-		context.setVariable("message", body);
-		
-		String process = templateEngine.process("email-template", context);
-		
-		
-		
-		Response response = sendEmail(from, to, subject, new Content("text/html", process));
-		
-		
-		LOGGER.info("Status code: " + response.getStatusCode() + 
+	public void sendHtml(String from, String to, String subject, String body, String link) {
+			Context context = new Context();		
+			context.setVariable("message", body);
+			context.setVariable("subject", subject);
+			if(link != null) {
+				context.setVariable("link", link);
+			}
+			
+			String process = templateEngine.process("email-template", context);
+			Response response = sendEmail(from, to, subject, new Content("text/html", process));
+			LOGGER.info("Status code: " + response.getStatusCode() + 
 					"Body: " + response.getBody() + 
 					"Headers: " + response.getHeaders());
-		
 	}
 	
 	
 	private Response sendEmail(String from, String to, String subject, Content content) {
 		Mail mail = new Mail(new Email(from), subject, new Email(to), content);
-		
-		mail.setReplyTo(new Email("naabin@outlook.com"));
 		Request request = new Request();
-		
 		Response response = null;
-		
 		try {
 			request.setMethod(Method.POST);
 			request.setEndpoint("mail/send");
