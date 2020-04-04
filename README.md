@@ -7,3 +7,4 @@ Booking system where restaurant owner will integrate this system and customer ca
 3. Sendgrid
 4. S3
 5. Elastic Beanstalk
+6. Codepipeline
