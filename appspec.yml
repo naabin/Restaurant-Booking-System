@@ -1,14 +1,18 @@
 version: 0.0
 os: linux
 files:
-  - source: ./springboottest-0.0.1-SNAPSHOT.jar
-    destination: /tmp
+- source: /
+  destination: /home/ec2-user
 hooks:
+  AfterInstall:
+    - location: fix_previleges.sh
+      timeout: 300
+      runas: root
   ApplicationStart:
-    - location: ./application_start.sh
-      timeout: 30
+    - location: start_server.sh
+      timeout: 300
       runas: root
   ApplicationStop:
-    - location: ./application_stop.sh
-      timeout: 30
+    - location: stop_server.sh
+      timeout: 300
       runas: root
