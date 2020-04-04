@@ -2,10 +2,11 @@ version: 0.2
 
 phases:
   build:
-    - pwd
-    - /reservation
-    - mvn install
-    - mvn package
+    commands:
+      - pwd
+      - /reservation
+      - mvn install
+      - mvn package
 artifacts:
   files:
     - target/*.jar
