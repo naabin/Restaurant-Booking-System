@@ -1,9 +1,7 @@
 package com.reservation.models;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -53,7 +51,7 @@ public class Restaurant extends Auditable {
 	
 
 	@OneToMany(cascade = CascadeType.ALL,mappedBy = "restaurantOpeningHours")
-	private Set<OpeningHours> openingHours = new HashSet<OpeningHours>();
+	private List<OpeningHours> openingHours = new ArrayList<OpeningHours>();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "restaurant")
 	private List<Reservation> bookings = new ArrayList<Reservation>();
@@ -121,11 +119,11 @@ public class Restaurant extends Auditable {
 		this.about = about;
 	}
 
-	public Set<OpeningHours> getOpeningHours() {
+	public List<OpeningHours> getOpeningHours() {
 		return openingHours;
 	}
 
-	public void setOpeningHours(Set<OpeningHours> openingHours) {
+	public void setOpeningHours(List<OpeningHours> openingHours) {
 		this.openingHours = openingHours;
 	}
 

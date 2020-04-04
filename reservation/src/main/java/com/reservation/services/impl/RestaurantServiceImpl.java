@@ -1,7 +1,7 @@
 package com.reservation.services.impl;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -33,7 +33,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Override
 	@Transactional
-	public Restaurant createRestaurant(Restaurant restaurant, Set<OpeningHours> openingHours) {
+	public Restaurant createRestaurant(Restaurant restaurant, List<OpeningHours> openingHours) {
 		for (OpeningHours openingHour : openingHours) {
 			openingHour.setRestaurantOpeningHours(restaurant);
 
@@ -54,7 +54,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 	@Override
 	public Restaurant updateRestaurant(Restaurant restaurant) {
-		Set<OpeningHours> openingHours = restaurant.getOpeningHours();
+		List<OpeningHours> openingHours = restaurant.getOpeningHours();
 		if (!openingHours.isEmpty()) {
 			for (OpeningHours openingHour : openingHours) {
 				this.openingHoursRepository.saveAndFlush(openingHour);

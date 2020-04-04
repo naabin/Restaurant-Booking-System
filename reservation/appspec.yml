@@ -1,0 +1,14 @@
+version: 0.0
+os: linux
+files:
+  - source: ./springboottest-0.0.1-SNAPSHOT.jar
+    destination: /tmp
+hooks:
+  ApplicationStart:
+    - location: ./application_start.sh
+      timeout: 30
+      runas: root
+  ApplicationStop:
+    - location: ./application_stop.sh
+      timeout: 30
+      runas: root
