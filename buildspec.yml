@@ -4,14 +4,13 @@ phases:
   install:
     commands:
       - echo installing maven
-      - apt-get update -y
-      - apt-get install -y maven
   build:
     commands:
       - echo building reservation system
       - pwd
       - cd reservation
       - mvn install
+      - mvn package
       - cd ..
 artifacts:
   files:
