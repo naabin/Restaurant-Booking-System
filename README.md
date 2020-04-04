@@ -3,6 +3,7 @@ Booking system where restaurant owner will integrate this system and customer ca
 
 #Tech Used
 1. Spring Boot
-2. MySql
+2. MySql RDS
 3. Sendgrid
 4. S3
+5. Elastic Beanstalk
