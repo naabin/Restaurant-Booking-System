@@ -7,6 +7,7 @@ phases:
       - cd reservation
       - mvn install
       - mvn package
+      - cd ..
 artifacts:
   files:
     - target/*.jar
