@@ -5,7 +5,6 @@ phases:
     commands:
       - pwd
       - cd reservation
-      - mvn install
       - mvn package
       - cd ..
 artifacts:
